@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GDC Credits · Web Technologies UI Components</title>
+  <meta name="description" content="A modern, responsive UI component system and credit management dashboard for Game Development Cell.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Ambient glowing background lights -->
+  <div class="bg-ambient">
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+  </div>
+
+  <!-- SVG Gradient Definitions -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#8b5cf6" />
+        <stop offset="50%" stop-color="#06b6d4" />
+        <stop offset="100%" stop-color="#10b981" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- ─── Navigation Bar UI Component ────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <!-- Gamepad Icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="6" y1="12" x2="10" y2="12"></line>
+            <line x1="8" y1="10" x2="8" y2="14"></line>
+            <line x1="15" y1="13" x2="15.01" y2="13"></line>
+            <line x1="18" y1="11" x2="18.01" y2="11"></line>
+            <rect x="2" y="6" width="20" height="12" rx="6"></rect>
+          </svg>
+        </div>
+        <span>GDC Credits</span>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="nav-tabs" aria-label="Main Navigation">
+        <button id="tabBtnDashboard" class="nav-tab-btn active" onclick="switchView('dashboard')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+          Live Dashboard
+        </button>
+        <button id="tabBtnShowcase" class="nav-tab-btn" onclick="switchView('showcase')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 22"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          UI Components Library
+        </button>
+      </nav>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <div id="navUserChip" class="user-status-chip">
+          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent-emerald);"></span>
+          <span>Arjun Mehta (M01)</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="openModal('infoModal')" title="Project Information">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          Project Info
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Main Content Container ─────────────────────────────────────────── -->
+  <main class="app-wrapper">
+
+    <!-- ====================================================================
+         VIEW 1: LIVE INTERACTIVE DASHBOARD
+         ==================================================================== -->
+    <section id="dashboardSection" class="view-section active">
+      
+      <!-- Top Bar: View Role Switcher & Member Quick Pick -->
+      <div class="page-hero">
+        <div class="hero-title-group">
+          <h1>Game Development Cell <span class="text-gradient">Credits</span></h1>
+          <p class="hero-subtitle">
+            A modular credit management and reward ledger designed for college clubs, tracking attendance, game jam milestones, and technical contributions.
+          </p>
+        </div>
+
+        <!-- Controls: Role Toggle & Profile Switcher -->
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+          <div class="nav-tabs" style="background:rgba(0,0,0,0.3);">
+            <button id="roleToggleMember" class="nav-tab-btn active">Member View</button>
+            <button id="roleToggleAdmin" class="nav-tab-btn">Admin View</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <select id="switchMemberSelect" class="form-control" style="font-size:0.8125rem; padding:0.45rem 2rem 0.45rem 0.75rem;"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMBER DASHBOARD CONTENT -->
+      <div id="memberDashboardContent">
+        <!-- Hero Profile Card -->
+        <div class="glass-card profile-card" style="margin-bottom: 1.5rem;">
+          <div class="profile-identity">
+            <div id="profileAvatar" class="avatar-large">AM</div>
+            <div>
+              <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+                <h2 id="profileName" class="profile-name">Arjun Mehta</h2>
+                <span id="profileStatusBadge" class="badge badge-violet">Hosteller</span>
+                <span id="profileTierBadge" class="badge badge-amber">Elite</span>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.25rem;">
+                <span id="profileId" style="font-weight:600; color:var(--text-primary);">M01</span> · 
+                <span id="profileRole">Lead Programmer</span> · Game Development Cell
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.75rem; align-items:center;">
+            <button class="btn btn-primary btn-sm" onclick="openModal('ruleModal')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              Credit Rules
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Credit Ledger exported as PDF snapshot!', 'success')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Stat Metric Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:rgba(139, 92, 246, 0.15); color:var(--accent-violet);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Total Credits</div>
+              <div id="statTotalCredits" class="stat-value">42</div>
+              <div class="stat-hint">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                Top 5% of Cell
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:rgba(6, 182, 212, 0.15); color:var(--accent-cyan);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Member Level</div>
+              <div id="statLevel" class="stat-value">Lvl 7</div>
+              <div class="stat-hint" style="color:var(--accent-cyan);">Senior Contributor</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:rgba(16, 185, 129, 0.15); color:var(--accent-emerald);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Attendance Rate</div>
+              <div id="statAttendance" class="stat-value">95%</div>
+              <div class="stat-hint">Above 85% requirement</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:rgba(245, 158, 11, 0.15); color:var(--accent-amber);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Academic Year</div>
+              <div class="stat-value" style="font-size:1.4rem;">2024–25</div>
+              <div class="stat-hint" style="color:var(--text-secondary);">Semester 5</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Column Dashboard Grid -->
+        <div class="dashboard-grid">
+          <!-- Left: Breakdown Cards & Activity Feed -->
+          <div style="display:flex; flex-direction:column; gap:1.5rem;">
+            
+            <!-- Category Breakdown Grid -->
+            <div class="glass-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                  Credit Distribution by Category
+                </div>
+                <span class="card-subtitle">Weight Multipliers</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:1rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                    <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:600;">MEETINGS (3x)</span>
+                    <strong style="color:var(--text-primary);">12 pts</strong>
+                  </div>
+                  <div class="progress-track"><div class="progress-fill" style="width: 80%; background:var(--accent-cyan);"></div></div>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:1rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                    <span style="font-size:0.75rem; color:var(--accent-violet); font-weight:600;">EVENTS (4x)</span>
+                    <strong style="color:var(--text-primary);">16 pts</strong>
+                  </div>
+                  <div class="progress-track"><div class="progress-fill" style="width: 90%; background:var(--accent-violet);"></div></div>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:1rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                    <span style="font-size:0.75rem; color:var(--accent-amber); font-weight:600;">EVENING (2x)</span>
+                    <strong style="color:var(--text-primary);">8 pts</strong>
+                  </div>
+                  <div class="progress-track"><div class="progress-fill" style="width: 65%; background:var(--accent-amber);"></div></div>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:1rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                    <span style="font-size:0.75rem; color:var(--accent-pink); font-weight:600;">BONUSES</span>
+                    <strong style="color:var(--text-primary);">6 pts</strong>
+                  </div>
+                  <div class="progress-track"><div class="progress-fill" style="width: 60%; background:var(--accent-pink);"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity Feed -->
+            <div class="glass-card">
+              <div class="card-header">
+                <div class="card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                  Recent Credit Ledger Activity
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="showToast('Activity log refreshed', 'info')">
+                  Refresh
+                </button>
+              </div>
+
+              <div id="activityFeedList" class="feed-list">
+                <!-- Dynamically populated by JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Circular Progress Gauge & Information Widget -->
+          <div style="display:flex; flex-direction:column; gap:1.5rem;">
+            
+            <!-- Circular Gauge Card -->
+            <div class="glass-card" style="text-align:center;">
+              <div class="card-header" style="justify-content:center;">
+                <div class="card-title">Annual Goal Progress</div>
+              </div>
+
+              <div style="display:flex; justify-content:center; margin:1.25rem 0;">
+                <div class="ring-widget">
+                  <svg viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="52" class="ring-bg"></circle>
+                    <circle id="circularGaugeProgress" cx="60" cy="60" r="52" class="ring-progress"></circle>
+                  </svg>
+                  <div class="ring-center-content">
+                    <div id="circularGaugeVal" class="ring-number">70%</div>
+                    <div class="ring-caption">Target 60 Pts</div>
+                  </div>
+                </div>
+              </div>
+
+              <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.5;">
+                Earn 18 more credits before May 2025 to achieve full Game Genesis Honors certification.
+              </p>
+
+              <div style="margin-top:1.25rem; padding-top:1rem; border-top:1px solid var(--border-glass);">
+                <button class="btn btn-primary" style="width:100%;" onclick="openModal('claimModal')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                  Submit Activity for Review
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Guidelines Card -->
+            <div class="glass-card">
+              <div class="card-title" style="margin-bottom:0.75rem; font-size:1rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-amber)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Hosteller & Day Scholar Fair Equity
+              </div>
+              <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.5;">
+                Evening sessions are marked optional for Day Scholars to ensure fair score normalization across campus residency categories.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN DASHBOARD CONTENT -->
+      <div id="adminDashboardContent" style="display:none;">
+        <div style="display:grid; grid-template-columns: 1fr 2fr; gap:1.5rem; margin-bottom:2rem;">
+          
+          <!-- Credit Allocation Form -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-violet)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Credit Allocation
+              </div>
+              <span class="badge badge-violet">Admin Panel</span>
+            </div>
+
+            <form id="adminCreditForm">
+              <div class="form-group">
+                <label class="form-label" for="adminMemberSelect">Target Member</label>
+                <select id="adminMemberSelect" class="form-control" required></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="adminCategorySelect">Activity Category</label>
+                <select id="adminCategorySelect" class="form-control">
+                  <option value="Event">Event Participation (4x Weight)</option>
+                  <option value="Meeting">General Meeting (3x Weight)</option>
+                  <option value="Evening">Evening Workshop (2x Weight)</option>
+                  <option value="Bonus">Special Contribution / Bonus</option>
+                  <option value="Penalty">Attendance Penalty / Deduction</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="adminPointsInput">Credit Points (+ or -)</label>
+                <input type="number" id="adminPointsInput" class="form-control" value="5" min="-20" max="50" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="adminReasonInput">Reason / Session Description</label>
+                <input type="text" id="adminReasonInput" class="form-control" placeholder="e.g. Built Unreal Physics Pipeline" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width:100%;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Record Credit Transaction
+              </button>
+            </form>
+          </div>
+
+          <!-- Members Directory & Live Leaderboard -->
+          <div class="glass-card">
+            <div class="card-header" style="flex-wrap:wrap;">
+              <div class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Members Directory & Leaderboard
+              </div>
+              
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <div class="search-input-wrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <input type="text" id="memberSearchInput" class="form-control" style="font-size:0.8125rem; padding-top:0.4rem; padding-bottom:0.4rem;" placeholder="Search name or ID...">
+                </div>
+
+                <select id="statusFilterSelect" class="form-control" style="font-size:0.8125rem; padding-top:0.4rem; padding-bottom:0.4rem; width:auto;">
+                  <option value="All">All Residency</option>
+                  <option value="Hosteller">Hostellers</option>
+                  <option value="Day Scholar">Day Scholars</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Member</th>
+                    <th>Status</th>
+                    <th>Credits</th>
+                    <th>Tier</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="membersTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Real-time synchronized with browser local storage</span>
+              <button class="btn btn-outline btn-sm" onclick="resetData()">Reset Demo Data</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: UI COMPONENTS LIBRARY & SHOWCASE
+         (Specific for Web Technologies component submission)
+         ==================================================================== -->
+    <section id="showcaseSection" class="view-section">
+      <div class="page-hero">
+        <div class="hero-title-group">
+          <h1>UI Component <span class="text-gradient">Library</span></h1>
+          <p class="hero-subtitle">
+            A comprehensive catalog of standalone, reusable UI components developed for the Web Technologies course component. Built with semantic HTML5, CSS3 Variables, Flexbox, CSS Grid, and Vanilla JavaScript.
+          </p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="switchView('dashboard')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Return to Dashboard
+        </button>
+      </div>
+
+      <div class="showcase-grid">
+
+        <!-- 1. Buttons Component -->
+        <article class="showcase-card">
+          <div class="showcase-header">
+            <h3>1. Interactive Button Components</h3>
+            <p class="showcase-desc">Features multiple visual weights, hover translation states, glowing box-shadows, and scalable sizes.</p>
+          </div>
+          <div class="showcase-preview-box">
+            <button class="btn btn-primary">Primary Violet</button>
+            <button class="btn btn-cyan">Cyan Action</button>
+            <button class="btn btn-secondary">Secondary Glass</button>
+            <button class="btn btn-outline">Outline Stroke</button>
+            <button class="btn btn-danger">Danger Action</button>
+            <button class="btn btn-primary btn-sm">Small Button</button>
+          </div>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy HTML</button>
+            <code>&lt;button class="btn btn-primary"&gt;Primary Violet&lt;/button&gt;
+&lt;button class="btn btn-cyan"&gt;Cyan Action&lt;/button&gt;
+&lt;button class="btn btn-secondary"&gt;Secondary Glass&lt;/button&gt;
+&lt;button class="btn btn-outline"&gt;Outline Stroke&lt;/button&gt;
+&lt;button class="btn btn-danger"&gt;Danger Action&lt;/button&gt;</code>
+          </div>
+        </article>
+
+        <!-- 2. Badges & Tags Component -->
+        <article class="showcase-card">
+          <div class="showcase-header">
+            <h3>2. Status Chips & Pill Badges</h3>
+            <p class="showcase-desc">Color-coded semantic status chips for residency types, credit tiers, and session tags with subtle transparency.</p>
+          </div>
+          <div class="showcase-preview-box">
+            <span class="badge badge-violet">Hosteller</span>
+            <span class="badge badge-cyan">Day Scholar</span>
+            <span class="badge badge-emerald">Verified Lead</span>
+            <span class="badge badge-amber">Elite Tier</span>
+            <span class="badge badge-rose">Attendance Warning</span>
+          </div>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy HTML</button>
+            <code>&lt;span class="badge badge-violet"&gt;Hosteller&lt;/span&gt;
+&lt;span class="badge badge-cyan"&gt;Day Scholar&lt;/span&gt;
+&lt;span class="badge badge-emerald"&gt;Verified Lead&lt;/span&gt;
+&lt;span class="badge badge-amber"&gt;Elite Tier&lt;/span&gt;
+&lt;span class="badge badge-rose"&gt;Attendance Warning&lt;/span&gt;</code>
+          </div>
+        </article>
+
+        <!-- 3. Form Input Components -->
+        <article class="showcase-card">
+          <div class="showcase-header">
+            <h3>3. Accessible Form Controls</h3>
+            <p class="showcase-desc">Dark glassmorphic inputs, custom styled select dropdowns, and search bars with embedded SVG icons.</p>
+          </div>
+          <div class="showcase-preview-box" style="flex-direction:column; align-items:stretch;">
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" placeholder="e.g. Arjun Mehta" value="Arjun Mehta">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Residency Category</label>
+                <select class="form-control">
+                  <option>Hosteller</option>
+                  <option>Day Scholar</option>
+                </select>
+              </div>
+            </div>
+            <div class="search-input-wrap">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" class="form-control" placeholder="Search components or logs...">
+            </div>
+          </div>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy HTML</button>
+            <code>&lt;div class="form-group"&gt;
+  &lt;label class="form-label"&gt;Full Name&lt;/label&gt;
+  &lt;input type="text" class="form-control" placeholder="e.g. Arjun Mehta"&gt;
+&lt;/div&gt;
+
+&lt;div class="search-input-wrap"&gt;
+  &lt;svg ...&gt;&lt;/svg&gt;
+  &lt;input type="text" class="form-control" placeholder="Search..."&gt;
+&lt;/div&gt;</code>
+          </div>
+        </article>
+
+        <!-- 4. Stat & Metric Card Component -->
+        <article class="showcase-card">
+          <div class="showcase-header">
+            <h3>4. Metric & Stat Display Card</h3>
+            <p class="showcase-desc">Displays key performance indicators (KPIs) with accent icon containers, bold typography, and contextual trend hints.</p>
+          </div>
+          <div class="showcase-preview-box">
+            <div class="stat-card" style="width:100%; max-width:320px;">
+              <div class="stat-icon-box" style="background:rgba(139, 92, 246, 0.15); color:var(--accent-violet);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Total Credits</div>
+                <div class="stat-value">42</div>
+                <div class="stat-hint">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                  Top 5% of Cell
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy HTML</button>
+            <code>&lt;div class="stat-card"&gt;
+  &lt;div class="stat-icon-box" style="background:rgba(139,92,246,0.15); color:var(--accent-violet);"&gt;
+    &lt;svg width="24" height="24" ...&gt;&lt;/svg&gt;
+  &lt;/div&gt;
+  &lt;div class="stat-info"&gt;
+    &lt;div class="stat-label"&gt;Total Credits&lt;/div&gt;
+    &lt;div class="stat-value"&gt;42&lt;/div&gt;
+    &lt;div class="stat-hint"&gt;Top 5% of Cell&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+          </div>
+        </article>
+
+        <!-- 5. Progress Gauges Component -->
+        <article class="showcase-card">
+          <div class="showcase-header">
+            <h3>5. Circular & Linear Progress Indicators</h3>
+            <p class="showcase-desc">SVG circular gauge with gradient strokeDashoffset calculation alongside smooth CSS horizontal progress tracks.</p>
+          </div>
+          <div class="showcase-preview-box" style="justify-content:space-around;">
+            <div class="ring-widget">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" class="ring-bg"></circle>
+                <circle cx="60" cy="60" r="52" class="ring-progress" style="stroke-dashoffset: 100;"></circle>
+              </svg>
+              <div class="ring-center-content">
+                <div class="ring-number">70%</div>
+                <div class="ring-caption">Goal Reach</div>
+              </div>
+            </div>
+
+            <div style="flex:1; max-width:280px;" class="progress-container">
+              <div class="progress-header">
+                <span class="progress-label">Attendance Target</span>
+                <span class="progress-val">85% / 100%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:85%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy HTML</button>
+            <code>&lt;!-- Linear Progress Bar --&gt;
+&lt;div class="progress-container"&gt;
+  &lt;div class="progress-header"&gt;
+    &lt;span class="progress-label"&gt;Attendance&lt;/span&gt;
+    &lt;span class="progress-val"&gt;85%&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="progress-track"&gt;
+    &lt;div class="progress-fill" style="width: 85%;"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+          </div>
+        </article>
+
+        <!-- 6. Modal Dialog & Interactive Toasts -->
+        <article class="showcase-card">
+          <div class="showcase-header">
+            <h3>6. Modal Dialogs & Toast Notifications</h3>
+            <p class="showcase-desc">Accessible overlay modal window and animated floating notification alert system with timeout auto-dismissal.</p>
+          </div>
+          <div class="showcase-preview-box">
+            <button class="btn btn-primary" onclick="openModal('infoModal')">Open Modal Dialog</button>
+            <button class="btn btn-cyan" onclick="showToast('Success: Transaction verified by President!', 'success')">Trigger Success Toast</button>
+            <button class="btn btn-danger" onclick="showToast('Alert: Attendance threshold not met!', 'error')">Trigger Error Toast</button>
+            <button class="btn btn-secondary" onclick="showToast('Notice: Evening session scheduled at 7:00 PM', 'info')">Trigger Info Toast</button>
+          </div>
+          <div class="code-container">
+            <button class="copy-btn" onclick="copySnippet(this)">Copy JS</button>
+            <code>// Trigger animated toast notification
+showToast('Transaction recorded successfully!', 'success');
+
+// Open / Close Accessible Modal Dialog
+openModal('infoModal');
+closeModal('infoModal');</code>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── Modal Dialog: Project Info ────────────────────────────────────── -->
+  <div id="infoModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Web Technologies Project Component</h3>
+        <button class="modal-close-btn" onclick="closeModal('infoModal')" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">
+          This web application presents a simplified, standalone UI component system created for the Web Technologies course component.
+        </p>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:1rem; font-size:0.8125rem;">
+          <div style="margin-bottom:0.4rem;"><strong>Project:</strong> Game Development Cell (GDC) Credit Management System</div>
+          <div style="margin-bottom:0.4rem;"><strong>Component Focus:</strong> Modular UI Components, Responsive CSS Grid, DOM Manipulation, SVG Gauges</div>
+          <div style="margin-bottom:0.4rem;"><strong>Hosting:</strong> GitHub Pages (Static Web)</div>
+          <div><strong>Author Repo:</strong> VRK1106 / WEB_TECH_CREDIT_SYSTEM</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('infoModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Modal Dialog: Credit Rules ───────────────────────────────────── -->
+  <div id="ruleModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">GDC Credit Calculation Rules</h3>
+        <button class="modal-close-btn" onclick="closeModal('ruleModal')" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text-primary);">Weight Multipliers:</strong></p>
+        <ul style="padding-left:1.25rem; margin-bottom:1rem;">
+          <li>Event Participation: <strong>4.0x</strong> multiplier</li>
+          <li>General Meetings: <strong>3.0x</strong> multiplier</li>
+          <li>Evening Workshops: <strong>2.0x</strong> multiplier (Hostellers only)</li>
+          <li>Minimum Attendance Threshold: <strong>85%</strong> for honors eligibility</li>
+        </ul>
+        <p><strong style="color:var(--text-primary);">Role Scoring Multipliers:</strong> Lead (1.0), Organising Team (0.8), Volunteer (0.6), Attendee (0.4).</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('ruleModal')">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Modal Dialog: Claim Activity ──────────────────────────────────── -->
+  <div id="claimModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Submit Activity for Credit</h3>
+        <button class="modal-close-btn" onclick="closeModal('claimModal')" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Activity Title</label>
+          <input type="text" class="form-control" placeholder="e.g. Completed Blender Character Rig">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Proof / GitHub PR Link</label>
+          <input type="text" class="form-control" placeholder="https://github.com/...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('claimModal')">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal('claimModal'); showToast('Activity submitted for admin verification!', 'success');">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Alert Notifications Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer style="max-width:1200px; margin:2rem auto 0; padding:1.5rem; border-top:1px solid var(--border-glass); text-align:center; font-size:0.8rem; color:var(--text-muted);">
+    <p>Web Technologies Project Component · UI Components & Credit Management System</p>
+    <p style="margin-top:0.25rem;">Built with Semantic HTML5, CSS3 Variables, Responsive Flexbox/Grid, and Vanilla JavaScript</p>
+  </footer>
+
+  <!-- Application Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
